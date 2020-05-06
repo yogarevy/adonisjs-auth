@@ -1,6 +1,7 @@
 'use strict'
 
 /** @type {import('@adonisjs/framework/src/Server')} */
+// @ts-ignore
 const Server = use('Server')
 
 /*
@@ -14,7 +15,8 @@ const Server = use('Server')
 */
 const globalMiddleware = [
   'Adonis/Middleware/BodyParser',
-  'App/Middleware/ConvertEmptyStringsToNull'
+  'App/Middleware/ConvertEmptyStringsToNull',
+  'Adonis/Middleware/AuthInit'
 ]
 
 /*

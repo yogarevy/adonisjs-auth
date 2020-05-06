@@ -1,6 +1,7 @@
 'use strict'
 
 /** @type {import('@adonisjs/framework/src/Env')} */
+// @ts-ignore
 const Env = use('Env')
 
 module.exports = {
