@@ -18,4 +18,9 @@ const Route = use('Route')
 
 Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
-})
+}).middleware(['auth'])
+
+Route.group(() => {
+  Route.post('auth/register', 'AuthController.register').as('register')
+  Route.post('auth/login', 'AuthController.login').as('login')
+}).prefix('api/v1').namespace('Auth')
