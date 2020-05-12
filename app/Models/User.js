@@ -7,6 +7,37 @@ const Model = use('Model')
 const Hash = use('Hash')
 
 class User extends Model {
+
+  static get primaryKey () {
+    return 'id'
+  }
+
+  static get incrementing () {
+    return false
+  }
+
+  static get hidden () {
+    return ['password',
+      'deleted_at',
+      'created_at',
+      'updated_at',
+      'avatar_id'
+    ]
+  }
+
+  static get visible () {
+    return [
+      'id',
+      'name',
+      'email',
+      'phone',
+      'status',
+      'is_main',
+      'last_modified_by',
+      'deleted_by'
+    ]
+  }
+
   static boot () {
     super.boot()
 
