@@ -51,9 +51,16 @@ class AuthController {
       } else {
         // if user doesn't exist, proceeds with saving him in DB
         const user = await User.create(dataUser)
-        
+
         let accessToken = await auth.generate(user)
-        return response.status(200).send({status: 200, message: 'Successed register new user'})
+        return response.status(200).send(
+          {
+            status: 200,
+            object: 'register',
+            url: request.originalUrl(),
+            message: 'Successed register new user'
+          }
+        )
       }
       
     } catch (err) {
@@ -76,7 +83,7 @@ class AuthController {
       //getting data passed within the request
       const data = request.only(['email', 'password'])
 
-      if (await auth.withRefreshToken().attempt(data.email, data.password)) {
+      if (await auth.authenticator('jwt').withRefreshToken().attempt(data.email, data.password)) {
         let user = await User.findBy('email', data.email)
         let accessToken = await auth.withRefreshToken().attempt(data.email, data.password)
 
@@ -84,7 +91,7 @@ class AuthController {
           {
             status: 200,
             message: 'Succesfully Login',
-            data: user,
+            user: user,
             access_token: accessToken
           }
         )
