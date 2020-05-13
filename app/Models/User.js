@@ -41,6 +41,9 @@ class User extends Model {
   static boot () {
     super.boot()
 
+    // Add the trait and casts to a model
+    this.addTrait('@provider:CastAttributes')
+
     /**
      * A hook to hash the user password before saving
      * it to the database.
@@ -50,6 +53,14 @@ class User extends Model {
         userInstance.password = await Hash.make(userInstance.password)
       }
     })
+  }
+
+  // add values to cast to upon set
+  static get casts () {
+    return {
+      status: 'boolean',
+      is_main: 'boolean'
+    }
   }
 
   /**
