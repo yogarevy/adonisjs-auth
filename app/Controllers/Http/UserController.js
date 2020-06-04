@@ -1,6 +1,11 @@
 'use strict'
 
+// @ts-ignore
 const User = use('App/Models/User')
+// @ts-ignore
+const Mapper = use('Mapper')
+// @ts-ignore
+const UserMapper = use('App/Mappers/UserMapper')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -19,6 +24,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+  // @ts-ignore
   async index ({ request, response, view }) {
     try {
       let search_term = request.input('search')
@@ -34,12 +40,10 @@ class UserController {
         conditions += " OR users.email ILIKE '%" + search_term + "%'"
       }
 
-      const result = await User.query().whereRaw(conditions).orderBy(sort, order).paginate(page, limit)
-      return response.status(200).json({
-        status: 200,
-        message: 'Successfully executed',
-        ...result.toJSON()
-      })
+      let paged = await User.query().whereRaw(conditions).orderBy(sort, order).paginate(page, limit)
+      let countAll = await User.getCount()
+      
+      return Mapper.list(new UserMapper(), paged, countAll, request.method(), request.originalUrl())
     } catch (error) {
       return response
         .status(error.status)
@@ -56,6 +60,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+  // @ts-ignore
   async create ({ request, response, view }) {
   }
 
@@ -67,6 +72,7 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  // @ts-ignore
   async store ({ request, response }) {
   }
 
@@ -79,6 +85,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+  // @ts-ignore
   async show ({ params, request, response, view }) {
   }
 
@@ -91,6 +98,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+  // @ts-ignore
   async edit ({ params, request, response, view }) {
   }
 
@@ -102,6 +110,7 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  // @ts-ignore
   async update ({ params, request, response }) {
   }
 
@@ -113,6 +122,7 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  // @ts-ignore
   async destroy ({ params, request, response }) {
   }
 }
