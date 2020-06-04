@@ -1,0 +1,103 @@
+'use strict'
+
+// @ts-ignore
+const BaseMapper = use('App/Services/Mapper/BaseMapper')
+
+class MapperService {
+    /**
+     * @param {BaseMapper} mapper
+     * @param paged
+     * @param {Number} countAll
+     * @param {String} method
+     * @param {Number} code
+     * @param {Array} additional
+     * @param {String} url
+     */
+    list(
+        mapper,
+        paged,
+        countAll,
+        method,
+        url,
+        // @ts-ignore
+        code = 200,
+        additional = []
+    ) {
+        let version = '1.0.1'
+        let message = 'Request is successfully executed.'
+        let errors = []
+        let item = []
+        let items = mapper.list(paged)
+        let meta = this.meta(code, version, method, message)
+        let pageInfo = this.pageInfo(
+            paged.pages.total,
+            paged.pages.perPage,
+            paged.pages.page,
+            paged.pages.lastPage,
+            countAll,
+            url
+        )
+        
+        let data = {
+            message: message,
+            item: Object.assign({}, item),
+            items: items,
+            additional: additional
+        }
+
+        let respon = {
+            meta: meta,
+            page_info: pageInfo,
+            errors: errors,
+            data: data
+        }
+
+        return respon
+    }
+
+    /**
+    * @param {String} url
+    * @param {Number} total
+    * @param {Number} perPage
+    * @param {Number} page
+    * @param {Number} lastPage
+    * @param {Number} count
+    */
+    pageInfo(
+        total = 1,
+        perPage = 1,
+        page = 1,
+        lastPage = 1,
+        count = 1,
+        url
+    )
+    {
+        return {
+            total: total,
+            per_page: perPage,
+            page: page,
+            last_page: lastPage,
+            count: count,
+            url: url
+        }
+    }
+
+    /**
+    * @param {Number} code
+    * @param {String} version
+    * @param {String} method
+    * @param {String} message
+    */
+    meta(code, version, method, message)
+    {
+        return {
+            code: code,
+            api_version: version,
+            method: method,
+            message: message
+        }
+    }
+
+}
+
+module.exports = MapperService
