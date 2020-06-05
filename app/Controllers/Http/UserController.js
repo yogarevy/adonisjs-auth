@@ -1,6 +1,11 @@
 'use strict'
 
+// @ts-ignore
 const User = use('App/Models/User')
+// @ts-ignore
+const Mapper = use('Mapper')
+// @ts-ignore
+const UserMapper = use('App/Mappers/UserMapper')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -17,9 +22,9 @@ class UserController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  // @ts-ignore
+  async index ({ request, response }) {
     try {
       let search_term = request.input('search')
       let page = (request.input('page') != null) ? request.input('page') : 1
@@ -34,12 +39,10 @@ class UserController {
         conditions += " OR users.email ILIKE '%" + search_term + "%'"
       }
 
-      const result = await User.query().whereRaw(conditions).orderBy(sort, order).paginate(page, limit)
-      return response.status(200).json({
-        status: 200,
-        message: 'Successfully executed',
-        ...result.toJSON()
-      })
+      let paged = await User.query().whereRaw(conditions).orderBy(sort, order).paginate(page, limit)
+      let countAll = await User.getCount()
+
+      return Mapper.list(new UserMapper(), paged, countAll, request.method(), request.originalUrl())
     } catch (error) {
       return response
         .status(error.status)
@@ -56,6 +59,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+  // @ts-ignore
   async create ({ request, response, view }) {
   }
 
@@ -67,6 +71,7 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  // @ts-ignore
   async store ({ request, response }) {
   }
 
@@ -77,9 +82,18 @@ class UserController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
+  // @ts-ignore
+  async show ({ params, request, response }) {
+    try {
+      let item = await User.findOrFail(params.id)
+
+      return Mapper.single(new UserMapper(), item, request.method(), request.originalUrl())
+    } catch (error) {
+      return response
+        .status(error.status)
+        .send(error)
+    }
   }
 
   /**
@@ -91,6 +105,7 @@ class UserController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
+  // @ts-ignore
   async edit ({ params, request, response, view }) {
   }
 
@@ -102,6 +117,7 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  // @ts-ignore
   async update ({ params, request, response }) {
   }
 
@@ -113,6 +129,7 @@ class UserController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
+  // @ts-ignore
   async destroy ({ params, request, response }) {
   }
 }
