@@ -10,8 +10,8 @@ class BaseMapper {
   list(items)
   {
     let result = [];
-    for(let i in items.rows){
-      result.push(this.single(items.rows[i]))
+    for(let i in items){
+      result.push(this.single(items[i]))
     }
 
     return result;
@@ -24,6 +24,22 @@ class BaseMapper {
   * @return mixed
   */
   single(item){}
+
+  /**
+   * Mapper for data create response.
+   *
+   * @param item
+   * @return mixed
+   */
+   create(item){}
+
+   /**
+   * Mapper for data edit response.
+   *
+   * @param item
+   * @return mixed
+   */
+  edit(item){}
 }
 
 module.exports = BaseMapper

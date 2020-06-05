@@ -22,10 +22,9 @@ class UserController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
   // @ts-ignore
-  async index ({ request, response, view }) {
+  async index ({ request, response }) {
     try {
       let search_term = request.input('search')
       let page = (request.input('page') != null) ? request.input('page') : 1
@@ -42,7 +41,7 @@ class UserController {
 
       let paged = await User.query().whereRaw(conditions).orderBy(sort, order).paginate(page, limit)
       let countAll = await User.getCount()
-      
+
       return Mapper.list(new UserMapper(), paged, countAll, request.method(), request.originalUrl())
     } catch (error) {
       return response
@@ -83,10 +82,18 @@ class UserController {
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
-   * @param {View} ctx.view
    */
   // @ts-ignore
-  async show ({ params, request, response, view }) {
+  async show ({ params, request, response }) {
+    try {
+      let item = await User.findOrFail(params.id)
+
+      return Mapper.single(new UserMapper(), item, request.method(), request.originalUrl())
+    } catch (error) {
+      return response
+        .status(error.status)
+        .send(error)
+    }
   }
 
   /**
