@@ -6,6 +6,10 @@ const User = use('App/Models/User')
 const Mapper = use('Mapper')
 // @ts-ignore
 const UserMapper = use('App/Mappers/UserMapper')
+// @ts-ignore
+const ExceptionHandler = use('App/Exceptions/Handler')
+// @ts-ignore
+const Logger = use('Logger')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -43,10 +47,13 @@ class UserController {
       let countAll = await User.getCount()
 
       return Mapper.list(new UserMapper(), paged, countAll, request.method(), request.originalUrl())
-    } catch (error) {
-      return response
-        .status(error.status)
-        .send(error)
+    } catch (e) {
+      Logger.debug({
+        url: request.originalUrl(),
+        method: request.method(),
+        error: e.message
+      }, 'request details')
+      throw new ExceptionHandler()
     }
   }
 
@@ -89,10 +96,13 @@ class UserController {
       let item = await User.findOrFail(params.id)
 
       return Mapper.single(new UserMapper(), item, request.method(), request.originalUrl())
-    } catch (error) {
-      return response
-        .status(error.status)
-        .send(error)
+    } catch (e) {
+      Logger.debug({
+        url: request.originalUrl(),
+        method: request.method(),
+        error: e.message
+      }, 'request details')
+      throw new ExceptionHandler()
     }
   }
 
