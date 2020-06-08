@@ -105,6 +105,55 @@ class MapperService {
     }
 
     /**
+     * @param errorMessage
+     * @param {String} method
+     * @param {Number} code
+     * @param {Array} additional
+     * @param {String} url
+     */
+    error(
+        errorMessage,
+        method,
+        url,
+        // @ts-ignore
+        code,
+        additional = []
+    ) {
+        let version = '1.0.1'
+        let message = errorMessage
+        let errors = [
+            {errors: errorMessage}
+        ]
+        let items = []
+        let item = []
+        let meta = this.meta(code, version, method, message)
+        let pageInfo = this.pageInfo(
+            '1',
+            1,
+            1,
+            1,
+            '1',
+            url
+        )
+        
+        let data = {
+            message: message,
+            item: Object.assign({}, item),
+            items: items,
+            additional: additional
+        }
+
+        let respon = {
+            meta: meta,
+            page_info: pageInfo,
+            errors: errors,
+            data: data
+        }
+
+        return respon
+    }
+
+    /**
     * @param {String} url
     * @param {String} total
     * @param {Number} perPage
