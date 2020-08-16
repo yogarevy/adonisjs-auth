@@ -19,6 +19,7 @@ const providers = [
   '@adonisjs/cors/providers/CorsProvider',
   '@adonisjs/lucid/providers/LucidProvider',
   'adonis-cast-attributes/providers/CastAttributesProvider',
+  '@adonisjs/validator/providers/ValidatorProvider',
   path.join(__dirname, '..', 'app/Services', 'Mapper/Providers/MapperServiceProvider')
 ]
 

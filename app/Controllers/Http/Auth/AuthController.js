@@ -3,6 +3,8 @@
 // @ts-ignore
 const User = use("App/Models/User");
 const uuid = require("uuid/v4");
+const { validate } = use('Validator');
+const RegisterValidation = use("App/Validators/RegisterValidation");
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -25,6 +27,7 @@ class AuthController {
     try {
       //getting data passed within the request
       const data = request.only(["name", "email", "password"]);
+      const validation = validate(data, RegisterValidation.rules, RegisterValidation.message);
 
       let dataUser = {
         id: uuid(),

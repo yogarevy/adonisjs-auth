@@ -22,7 +22,7 @@ Route.get('/', () => {
 
 //Authentication
 Route.group(() => {
-  Route.post('auth/register', 'AuthController.register').as('register')
+  Route.post('auth/register', 'AuthController.register').as('register').validator('RegisterValidation')
   Route.post('auth/login', 'AuthController.login').as('login')
 }).prefix('api/v1').namespace('Auth')
 
