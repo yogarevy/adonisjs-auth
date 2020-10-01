@@ -28,6 +28,8 @@ class ExceptionHandler extends BaseExceptionHandler {
       response.status(error.status).send(Mapper.error('Oops... Something went wrong.', request.method(), request.originalUrl(), error.status))
     } else if (error.status === 404) {
       response.status(error.status).send(Mapper.error('Oops... Not Found.', request.method(), request.originalUrl(), error.status))
+    } else if (error.status === 401) {
+      response.status(error.status).send(Mapper.error('Unauthorized.', request.method(), request.originalUrl(), error.status))
     } else {
       response.status(error.status).send(Mapper.error(error.message, request.method(), request.originalUrl(), error.status))
     }
