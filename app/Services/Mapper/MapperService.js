@@ -153,6 +153,51 @@ class MapperService {
         return respon
     }
 
+  /**
+   * @param {String} method
+   * @param {Number} code
+   * @param {Array} additional
+   * @param {String} url
+   */
+  success(
+    method,
+    url,
+    // @ts-ignore
+    code = 200,
+    additional = []
+  ) {
+    let version = '1.0.1'
+    let message = 'Request is successfully executed.'
+    let errors = []
+    let items = []
+    let item = []
+    let meta = this.meta(code, version, method, message)
+    let pageInfo = this.pageInfo(
+      '1',
+      1,
+      1,
+      1,
+      '1',
+      url
+    )
+
+    let data = {
+      message: message,
+      item: Object.assign({}, item),
+      items: items,
+      additional: additional
+    }
+
+    let respon = {
+      meta: meta,
+      page_info: pageInfo,
+      errors: errors,
+      data: data
+    }
+
+    return respon
+  }
+
     /**
      * @param validation
      * @param {String} method
