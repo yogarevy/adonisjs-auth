@@ -10,6 +10,9 @@ const UserMapper = use('App/Mappers/UserMapper')
 const ExceptionHandler = use('App/Exceptions/Handler')
 // @ts-ignore
 const Logger = use('Logger')
+const { validate } = use('Validator');
+const UpdateUserValidation = use("App/Validators/UpdateUserValidation");
+const Helpers = use('Helpers')
 
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
@@ -128,7 +131,47 @@ class UserController {
    * @param {Response} ctx.response
    */
   // @ts-ignore
-  async update ({ params, request, response }) {
+  async update ({ params, auth, request, response }) {
+    try {
+      //getting data passed within the request
+      const data = request.only(["name", "email", "password", "phone", "status"]);
+      let item = await User.findOrFail(params.id)
+
+      const validation = validate(data, UpdateUserValidation.rules, UpdateUserValidation.message);
+
+      let imageId = null
+      if (request.file('images')) {
+        imageId = request.file('images', {
+          types: ['image'],
+          size: '2mb'
+        })
+        await imageId.move(Helpers.tmpPath('uploads'), {
+          name: params.id + '.jpg',
+            overwrite: true,
+        })
+
+        if (!imageId.moved()) {
+          return imageId.errors()
+        }
+      }
+
+      const user = await auth.getUser();
+      item.name = data.name
+      item.email = data.email
+      data.password ? item.password = data.password : ''
+      item.status = data.status ? data.status : item.status
+      item.last_modified_by = user.id;
+      await item.save();
+
+      return Mapper.single(new UserMapper(), item, request.method(), request.originalUrl())
+    } catch (e) {
+      Logger.debug({
+        url: request.originalUrl(),
+        method: request.method(),
+        error: e.message
+      }, 'request details')
+      throw new ExceptionHandler()
+    }
   }
 
   /**

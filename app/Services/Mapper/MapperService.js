@@ -37,7 +37,7 @@ class MapperService {
             countAll,
             url
         )
-        
+
         let data = {
             message: message,
             item: Object.assign({}, item),
@@ -86,7 +86,7 @@ class MapperService {
             '1',
             url
         )
-        
+
         let data = {
             message: message,
             item: Object.assign({}, item),
@@ -135,7 +135,7 @@ class MapperService {
             '1',
             url
         )
-        
+
         let data = {
             message: message,
             item: Object.assign({}, item),
@@ -163,15 +163,14 @@ class MapperService {
     validation(
         validation,
         method,
-        url,
         // @ts-ignore
         code = 422,
         additional = []
     ) {
         let version = '1.0.1'
-        let message = 'Oops... Something went wrong.'
         let messageBag = validation
-        let errors = messageBag.message
+        let message = messageBag[0].message
+        let errors = messageBag
         let items = []
         let item = []
         let meta = this.meta(code, version, method, message)
@@ -180,10 +179,9 @@ class MapperService {
             1,
             1,
             1,
-            '1',
-            url
+            '1'
         )
-        
+
         let data = {
             message: message,
             item: Object.assign({}, item),

@@ -38,28 +38,16 @@ class AuthController {
         is_main: 1,
       };
 
-      //looking for user in database
-      const userExists = await User.findBy("email", data.email);
+      const user = await User.create(dataUser);
 
-      //if user exists then dont save
-      if (userExists) {
-        return response.status(400).send({
-          status: 400,
-          message: "User already registered.",
-        });
-      } else {
-        // if user doesn't exist, proceeds with saving him in DB
-        const user = await User.create(dataUser);
-
-        // @ts-ignore
-        let accessToken = await auth.generate(user);
-        return response.status(200).send({
-          status: 200,
-          object: "register",
-          url: request.originalUrl(),
-          message: "Successed register new user",
-        });
-      }
+      // @ts-ignore
+      let accessToken = await auth.generate(user);
+      return response.status(200).send({
+        status: 200,
+        object: "register",
+        url: request.originalUrl(),
+        message: "Successed register new user",
+      });
     } catch (err) {
       return response.status(err.status).send(err);
     }

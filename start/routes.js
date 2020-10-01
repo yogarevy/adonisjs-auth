@@ -30,4 +30,5 @@ Route.group(() => {
 Route.group(() => {
   Route.get('users', 'Api/UserController.index').as('users.index')
   Route.get('users/show/:id', 'Api/UserController.show').as('users.show')
+  Route.post('users/update/:id', 'Api/UserController.update').as('users.update').validator('UpdateUserValidation')
 }).prefix('api/v1').middleware(['auth'])
