@@ -3,13 +3,16 @@
 // @ts-ignore
 const Mapper = use('Mapper')
 
-class RegisterValidation {
+class UpdateUserValidation {
   get rules () {
+    const userId = this.ctx.params.id
     return {
       // validation rules
       name: 'required|max:150|min:2',
-      email: 'required|email|unique:users',
-      password: 'required|min:8'
+      email: `required|email|unique:users,email,id,${userId}`,
+      phone: 'number|min:10|max:15|unique:users',
+      password: 'min:8',
+      status: 'boolean'
     }
   }
 
@@ -19,8 +22,12 @@ class RegisterValidation {
       'email.required': 'You must provide a email address.',
       'email.email': 'You must provide a valid email address.',
       'email.unique': 'This email is already registered.',
-      'password.required': 'You must provide a password',
-      'password.min': 'Password must be 8 characters or more.'
+      'password.min': 'Password minimal 8 characters or more.',
+      'phone.number': 'Phone must be a number.',
+      'phone.unique': 'This phone is already registered.',
+      'phone.min': 'Phone number minimum 10 numbers.',
+      'phone.max': 'Phone number maximum 15 numbers.',
+      'status.boolean': 'Status must be 1 or 0.',
     }
   }
 
@@ -37,4 +44,4 @@ class RegisterValidation {
   }
 }
 
-module.exports = RegisterValidation
+module.exports = UpdateUserValidation
