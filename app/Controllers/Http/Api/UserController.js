@@ -124,7 +124,7 @@ class UserController {
 
   /**
    * Update user details.
-   * PUT or PATCH users/:id
+   * PUT or PATCH users/update/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
@@ -176,14 +176,36 @@ class UserController {
 
   /**
    * Delete a user with id.
-   * DELETE users/:id
+   * DELETE users/delete/:id
    *
    * @param {object} ctx
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
   // @ts-ignore
-  async destroy ({ params, request, response }) {
+  async destroy ({ params, auth, request, response }) {
+    try {
+      let item = await User.findOrFail(params.id)
+
+      //This update is using when delete type is soft delete
+      const user = await auth.getUser();
+
+      item.last_modified_by = user.id
+      item.deleted_by = user.id
+      item.save()
+      //end soft delete
+
+      await item.delete()
+
+      return Mapper.success(request.method(), request.originalUrl())
+    } catch (e) {
+      Logger.debug({
+        url: request.originalUrl(),
+        method: request.method(),
+        error: e.message
+      }, 'request details')
+      throw new ExceptionHandler()
+    }
   }
 }
 

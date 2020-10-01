@@ -17,7 +17,7 @@ class UserMapper extends BaseMapper {
             'email': item.email,
             'phone': item.phone,
             'status': Boolean(Number(item.status)),
-            'is_main': item.is_main,
+            'is_main': Boolean(Number(item.is_main)),
             'created_at': item.created_at,
             'last_modified_by': item.last_modified_by,
             'deleted_by': item.deleted_by
