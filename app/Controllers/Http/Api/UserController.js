@@ -36,7 +36,7 @@ class UserController {
       let sort = (request.input('sort') != null) ? request.input('sort') : 'users.updated_at'
       let order = (request.input('order') != null) ? request.input('order') : 'DESC'
       let conditions = '1 = 1'
- 
+
       if (search_term != null) {
         conditions += " AND users.name ILIKE '%" + search_term + "%'"
         conditions += " OR users.phone ILIKE '%" + search_term + "%'"

@@ -28,6 +28,6 @@ Route.group(() => {
 
 //Users
 Route.group(() => {
-  Route.get('users', 'UserController.index').as('users.index')
-  Route.get('users/show/:id', 'UserController.show').as('users.show')
+  Route.get('users', 'Api/UserController.index').as('users.index')
+  Route.get('users/show/:id', 'Api/UserController.show').as('users.show')
 }).prefix('api/v1').middleware(['auth'])
